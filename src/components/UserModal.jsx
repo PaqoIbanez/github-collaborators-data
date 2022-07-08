@@ -22,13 +22,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
    },
 }));
 
-export interface DialogTitleProps {
-   id: string;
-   children?: ReactNode;
-   onClose: () => void;
-}
-
-const BootstrapDialogTitle = (props: DialogTitleProps) => {
+const BootstrapDialogTitle = (props) => {
    const { children, onClose, ...other } = props;
 
    return (
@@ -52,14 +46,9 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
    );
 };
 
-interface Props {
-   id: string;
-   open: boolean;
 
-   handleClose: () => void;
-}
 
-export default function UserModal({ open, handleClose, id }: Props) {
+export default function UserModal({ open, handleClose, id }) {
 
    const [user, setUser] = useState<UserProps>({
       id: '',
@@ -67,7 +56,7 @@ export default function UserModal({ open, handleClose, id }: Props) {
       avatar_url: '',
       name: ''
    })
-   const [languages, setLanguages] = useState<string[][number]>([]);
+   const [languages, setLanguages] = useState([]);
 
    useEffect(() => {
       if (id === "") return;
