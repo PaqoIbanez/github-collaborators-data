@@ -20,6 +20,8 @@ const Home = () => {
    const [id, setId] = useState('');
 
    const handleUserInfo = (idFromCard: string) => {
+      console.log(idFromCard);
+
       setOpen(true);
       setId(idFromCard);
    }
@@ -46,15 +48,12 @@ const Home = () => {
       setIsLoading(true);
       try {
          const { data: contributors } = await gitgubApi.get(
-            `/repos/${owner}/${repository}/contributors?page=1&per_page=1000`,
-            {
-               'headers': { 'Authorization': 'token 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' }
-            }
+            `/repos/${owner}/${repository}/contributors?page=1&per_page=1000`
          );
          setError(false);
          contributors.map((contributor: any) => {
             gitgubApi.get(`/users/${contributor.login}`, {
-               'headers': { 'Authorization': 'token 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' }
+               'headers': { 'Authorization': 'token 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' }
             }).then(data => {
                setTimeout(() => {
                   setUsers(old => [...old, data.data]);

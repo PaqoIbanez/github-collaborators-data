@@ -67,24 +67,24 @@ export default function UserModal({ open, handleClose, id }: Props) {
       avatar_url: '',
       name: ''
    })
-   const [languages, setLanguages] = useState<Array<number | string> | number>([]);
+   const [languages, setLanguages] = useState<string[][number]>([]);
 
    useEffect(() => {
       if (id === "") return;
 
-      let languages:Element[] = [];
+      let languages = [];
       let dataInPerCents;
       const fetchData = async () => {
          const { data } = await gitgubApi.get(`/users/${id}`, {
-            'headers': { 'Authorization': 'token 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' }
+            'headers': { 'Authorization': 'token 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' }
          });
          setUser(data);
          const { data: repos } = await gitgubApi.get(`/users/${id}/repos`, {
-            'headers': { 'Authorization': 'token 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' }
+            'headers': { 'Authorization': 'token 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' }
          });
          repos.map(async ({ languages_url }) => {
             const { data: languagesFromApi } = await gitgubApi.get(languages_url, {
-               'headers': { 'Authorization': 'token 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' }
+               'headers': { 'Authorization': 'token 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' }
             });
             languages.push(languagesFromApi);
             let sum = languages.reduce((acc, curr) => {
