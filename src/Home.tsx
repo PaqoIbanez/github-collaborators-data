@@ -14,14 +14,11 @@ export const gitgubApi = axios.create({
 });
 
 const Home = () => {
-
    const [open, setOpen] = useState(false);
    const handleClose = () => setOpen(false);
    const [id, setId] = useState('');
 
    const handleUserInfo = (idFromCard: string) => {
-      console.log(idFromCard);
-
       setOpen(true);
       setId(idFromCard);
    }
@@ -42,6 +39,7 @@ const Home = () => {
 
 
    const getContributors = async () => {
+
       setError(false);
       setUsers([]);
       if (owner === '' || repository === '') return;
@@ -53,7 +51,10 @@ const Home = () => {
          setError(false);
          contributors.map((contributor: any) => {
             gitgubApi.get(`/users/${contributor.login}`, {
-               'headers': { 'Authorization': `token ${process.env.REACT_APP}` }
+               'headers': {
+                  'Authorization': `token ${import.meta.env.VITE_ACCESS_TOKEN}`,
+                  'Accept': 'application/vnd.github.v3+json',
+               }
             }).then(data => {
                setTimeout(() => {
                   setUsers(old => [...old, data.data]);
@@ -104,39 +105,39 @@ const Home = () => {
                users && users.map((user, i) => {
                   if (user.login === '') return <div key={i}></div>;
                   return (
-                        <Card
+                     <Card
                         key={i}
-                           elevation={1}
-                           sx={{ margin: '5px', width: '200px' }}
-                           onClick={() => handleUserInfo(user.login)}
-                        >
-                           <CardMedia
-                              component="img"
-                              image={user.avatar_url}
-                              alt="green iguana"
-                           />
-                           <CardContent sx={{ mb: 0 }}>
-                              <Typography variant="caption" component="div">
-                                 {user.name} - {user.login}
-                              </Typography>
-                              <Typography variant="caption" color="text.secondary">
-                                 {
-                                    user.location && `${user.location.substring(0, 100)}`
-                                 }
-                                 {
-                                    user.bio && user.bio.length > 150 ? '...' : ''
-                                 }
-                              </Typography>
-                              <Typography variant="caption" color="text.secondary">
-                                 {
-                                    user.email
-                                 }
-                                 {
-                                    user.bio && user.bio.length > 150 ? '...' : ''
-                                 }
-                              </Typography>
-                           </CardContent>
-                        </Card>
+                        elevation={1}
+                        sx={{ margin: '5px', width: '200px' }}
+                        onClick={() => handleUserInfo(user.login)}
+                     >
+                        <CardMedia
+                           component="img"
+                           image={user.avatar_url}
+                           alt="green iguana"
+                        />
+                        <CardContent sx={{ mb: 0 }}>
+                           <Typography variant="caption" component="div">
+                              {user.name} - {user.login}
+                           </Typography>
+                           <Typography variant="caption" color="text.secondary">
+                              {
+                                 user.location && `${user.location.substring(0, 100)}`
+                              }
+                              {
+                                 user.bio && user.bio.length > 150 ? '...' : ''
+                              }
+                           </Typography>
+                           <Typography variant="caption" color="text.secondary">
+                              {
+                                 user.email
+                              }
+                              {
+                                 user.bio && user.bio.length > 150 ? '...' : ''
+                              }
+                           </Typography>
+                        </CardContent>
+                     </Card>
                   )
                })
             }
