@@ -53,7 +53,7 @@ const Home = () => {
          setError(false);
          contributors.map((contributor: any) => {
             gitgubApi.get(`/users/${contributor.login}`, {
-               'headers': { 'Authorization': 'token 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' }
+               'headers': { 'Authorization': `token ${process.env.REACT_APP}` }
             }).then(data => {
                setTimeout(() => {
                   setUsers(old => [...old, data.data]);
