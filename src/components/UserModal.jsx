@@ -7,9 +7,8 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import { useState, ReactNode, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
-import { UserProps } from '../../interfaces';
 import { gitgubApi } from '../Home';
 import { LanguagePercentage } from './LanguagePercentage';
 
@@ -50,7 +49,7 @@ const BootstrapDialogTitle = (props) => {
 
 export default function UserModal({ open, handleClose, id }) {
 
-   const [user, setUser] = useState<UserProps>({
+   const [user, setUser] = useState({
       id: '',
       login: '',
       avatar_url: '',
