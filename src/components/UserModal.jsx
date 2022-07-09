@@ -64,15 +64,24 @@ export default function UserModal({ open, handleClose, id }) {
       let dataInPerCents;
       const fetchData = async () => {
          const { data } = await gitgubApi.get(`/users/${id}`, {
-            'headers': { 'Authorization': 'token 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' }
+            'headers': {
+               'Authorization': `token ${import.meta.env.VITE_ACCESS_TOKEN}`,
+               'Accept': 'application/vnd.github.v3+json',
+            }
          });
          setUser(data);
          const { data: repos } = await gitgubApi.get(`/users/${id}/repos`, {
-            'headers': { 'Authorization': 'token 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' }
+            'headers': {
+               'Authorization': `token ${import.meta.env.VITE_ACCESS_TOKEN}`,
+               'Accept': 'application/vnd.github.v3+json',
+            }
          });
          repos.map(async ({ languages_url }) => {
             const { data: languagesFromApi } = await gitgubApi.get(languages_url, {
-               'headers': { 'Authorization': 'token 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' }
+               'headers': {
+                  'Authorization': `token ${import.meta.env.VITE_ACCESS_TOKEN}`,
+                  'Accept': 'application/vnd.github.v3+json',
+               }
             });
             languages.push(languagesFromApi);
             let sum = languages.reduce((acc, curr) => {
