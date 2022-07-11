@@ -63,6 +63,7 @@ const Home = () => {
             });
          });
       } catch (error) {
+         setIsLoading(false);
          setError(true);
       }
    }
