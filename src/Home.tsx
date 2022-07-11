@@ -46,7 +46,12 @@ const Home = () => {
       setIsLoading(true);
       try {
          const { data: contributors } = await gitgubApi.get(
-            `/repos/${owner}/${repository}/contributors?page=1&per_page=1000`
+            `/repos/${owner}/${repository}/contributors?page=1&per_page=1000`, {
+               'headers': {
+                  'Authorization': `token ${import.meta.env.VITE_ACCESS_TOKEN}`,
+                  'Accept': 'application/vnd.github.v3+json',
+               }
+            }
          );
          setError(false);
          contributors.map((contributor: any) => {

@@ -68,7 +68,7 @@ export default function UserModal({ open, handleClose, id }) {
                'Authorization': `token ${import.meta.env.VITE_ACCESS_TOKEN}`,
                'Accept': 'application/vnd.github.v3+json',
             }
-         });
+         })
          setUser(data);
          const { data: repos } = await gitgubApi.get(`/users/${id}/repos`, {
             'headers': {

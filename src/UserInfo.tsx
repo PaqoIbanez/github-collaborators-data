@@ -20,12 +20,7 @@ export const UserInfo = () => {
 
    useEffect(() => {
       const fetchData = async () => {
-         const { data } = await gitgubApi.get(`/users/${id}`, {
-            'headers': { 'Authorization': 'token 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' }
-         });
-
-
-
+         const { data } = await gitgubApi.get(`/users/${id}`);
          setUser(data);
       }
 
