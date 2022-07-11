@@ -86,7 +86,7 @@ export default function UserModal({ open, handleClose, id }) {
             languages.push(languagesFromApi);
             let sum = languages.reduce((acc, curr) => {
                Object.entries(curr).forEach(([key, value]) => {
-                  if (key === 'JavaScript' || key === 'TypeScript') return; //add if you want to ignore these
+                  // if (key === 'JavaScript' || key === 'TypeScript') return; //add if you want to ignore these
                   if (acc[key]) acc[key] += curr[key];
                   else acc[key] = value;
                })
