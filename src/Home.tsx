@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Box, Button, Card, CardContent, CardMedia, Chip, Container, Grid, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { Table } from './Table';
@@ -8,20 +8,20 @@ import 'mdbreact/dist/css/mdb.css';
 import { Loading } from './components/Loading';
 import { UIContext } from './context/ui/UIContext';
 import UserModal from './components/UserModal';
-
-export const gitgubApi = axios.create({
-   baseURL: 'https://api.github.com'
-});
+import { gitgubApi } from './api/api';
 
 const Home = () => {
+
+   const { isLoading, setIsLoading } = useContext(UIContext);
+   const [repository, setRepository] = useState('');
+   const [error, setError] = useState(false);
    const [open, setOpen] = useState(false);
-   const handleClose = () => setOpen(false);
+   const [owner, setOwner] = useState('');
    const [id, setId] = useState('');
 
-   const handleUserInfo = (idFromCard: string) => {
-      setOpen(true);
-      setId(idFromCard);
-   }
+   let contributors: any[] = [];
+
+   let i = 1;
 
    const [users, setUsers] = useState([{
       avatar_url: "",
@@ -32,44 +32,56 @@ const Home = () => {
       name: ""
    }]);
 
-   const [owner, setOwner] = useState('');
-   const [repository, setRepository] = useState('');
-   const [error, setError] = useState(false);
-   const { isLoading, setIsLoading } = useContext(UIContext);
-
+   const handleUserInfo = (idFromCard: string) => {
+      setOpen(true);
+      setId(idFromCard);
+   }
 
    const getContributors = async () => {
-
-      setError(false);
-      setUsers([]);
-      if (owner === '' || repository === '') return;
       setIsLoading(true);
       try {
-         const { data: contributors } = await gitgubApi.get(
-            `/repos/${owner}/${repository}/contributors?page=1&per_page=1000`, {
-               'headers': {
-                  'Authorization': `token ${import.meta.env.VITE_ACCESS_TOKEN}`,
-                  'Accept': 'application/vnd.github.v3+json',
-               }
+         const { data } = await gitgubApi.get<any[]>(
+            `/repos/${owner}/${repository}/contributors?page=${i}&per_page=100`, {
+            'headers': {
+               'Authorization': `token ${import.meta.env.VITE_ACCESS_TOKEN}`,
+               'Accept': 'application/vnd.github.v3+json',
             }
+         }
          );
+
+         if (data.length > 0) {
+            data.map(cont => contributors.push(cont))
+            i++;
+            getContributors();
+         } else {
+            getContributorsInfo(contributors);
+         }
+
+      } catch (error) {
+         setIsLoading(false);
+         setError(true);
+      }
+   }
+
+   const getContributorsInfo = async (contributorss: any[]) => {
+      if (owner === '' || repository === '') return;
+      setUsers([]);
+      setError(false);
+      try {
          setError(false);
-         contributors.map((contributor: any) => {
+         contributorss.map((contributor: any) => {
             gitgubApi.get(`/users/${contributor.login}`, {
                'headers': {
                   'Authorization': `token ${import.meta.env.VITE_ACCESS_TOKEN}`,
                   'Accept': 'application/vnd.github.v3+json',
                }
             }).then(data => {
-               setTimeout(() => {
-                  setUsers(old => [...old, data.data]);
-                  setIsLoading(false);
-               }, 2500);
+               setUsers(old => [...old, data.data]);
+               setIsLoading(false);
             });
          });
       } catch (error) {
-         setIsLoading(false);
-         setError(true);
+         console.log(error);
       }
    }
 
@@ -99,7 +111,7 @@ const Home = () => {
 
             </Grid><br />
          </Container >
-         <UserModal open={open} handleClose={handleClose} id={id} />
+         <UserModal open={open} handleClose={() => setOpen(false)} id={id} />
          {
             <Box padding={5}>
                <Table users={users} />
@@ -151,6 +163,5 @@ const Home = () => {
       </>
    )
 }
-
 
 export default Home;

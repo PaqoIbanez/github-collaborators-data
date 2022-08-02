@@ -8,9 +8,9 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import { useState, useEffect } from 'react';
-import { Box } from '@mui/material';
-import { gitgubApi } from '../Home';
+import { Box, Grid } from '@mui/material';
 import { LanguagePercentage } from './LanguagePercentage';
+import { gitgubApi } from '../api/api';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
    '& .MuiDialogContent-root': {
@@ -108,7 +108,8 @@ export default function UserModal({ open, handleClose, id }) {
             for (const arrLanguages in objLanguages) {
                sortable.push([arrLanguages, objLanguages[arrLanguages]]);
             }
-            setLanguages(sortable);
+            const a = sortable.sort((a, b) => a[1] + b[1]);
+            setLanguages(a);
          })
 
       }
@@ -120,42 +121,53 @@ export default function UserModal({ open, handleClose, id }) {
             onClose={handleClose}
             aria-labelledby="customized-dialog-title"
             open={open}
-            maxWidth='xl'
+            maxWidth='md'
+            fullWidth
          >
             <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                {user.name}
             </BootstrapDialogTitle>
-            <DialogContent style={{ marginInline: 12 }}>
-
-               <img src={user.avatar_url} alt={user.avatar_url} width={450} />
-
-               <Box pt={2} maxWidth={450}>
-
-                  <Typography variant="h6" component="div">
-                     User: {user.login}
-                  </Typography>
-                  <Typography variant="h6" color="text.secondary">
-                     {
-                        user.location && `Location: ${user.location.substring(0, 100)}`
-                     }
-                  </Typography>
-                  <Typography variant="h6" color="text.secondary">
-                     {
-                        user.bio && user.bio.length > 150 ? '...' : ''
-                     }
-                  </Typography>
-                  <Typography variant="h6" color="text.secondary">
-                     {
-                        user.email && `Email: ${user.email}`
-                     }
-                  </Typography>
-                  <Typography variant="h6" color="text.secondary">
-                     {
-                        user.bio && `Bio: ${user.bio}`
-                     }
-                  </Typography>
-
+            <DialogContent style={{ marginInline: 20 }}>
+               <Box textAlign='center' mb='20px'>
+                  <img src={user.avatar_url} alt={user.avatar_url} width={320} />
                </Box>
+
+               <Grid container>
+                  <Grid item md={6}>
+
+                     <Box pt={2} maxWidth={450}>
+
+                        <Typography variant="h6" component="div">
+                           User: {user.login}
+                        </Typography>
+                        <Typography variant="h6" color="text.secondary">
+                           {
+                              user.location && `Location: ${user.location.substring(0, 100)}`
+                           }
+                        </Typography>
+                        <Typography variant="h6" color="text.secondary">
+                           {
+                              user.bio && user.bio.length > 150 ? '...' : ''
+                           }
+                        </Typography>
+                        <Typography variant="h6" color="text.secondary">
+                           {
+                              user.email && `Email: ${user.email}`
+                           }
+                        </Typography>
+                        <Typography variant="h6" color="text.secondary">
+                           {
+                              user.bio && `Bio: ${user.bio}`
+                           }
+                        </Typography>
+
+                     </Box>
+                  </Grid>
+                  <Grid item md={6}>
+                     <img src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${user.login}&layout=compact&langs_count=20`} width='400px' />
+                  </Grid>
+               </Grid>
+
 
                {
                   languages.map((language, i) => {

@@ -2,7 +2,7 @@ import { Box, Card, CardContent, CardMedia, Typography } from '@mui/material';
 import { UserProps } from '../interfaces';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { gitgubApi } from './Home';
+import { gitgubApi } from './api/api';
 
 export const UserInfo = () => {
 
@@ -20,7 +20,12 @@ export const UserInfo = () => {
 
    useEffect(() => {
       const fetchData = async () => {
-         const { data } = await gitgubApi.get(`/users/${id}`);
+         const { data } = await gitgubApi.get(`/users/${id}`, {
+            'headers': { 'Authorization': 'token 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' }
+         });
+
+
+
          setUser(data);
       }
 

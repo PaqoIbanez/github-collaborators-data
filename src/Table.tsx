@@ -44,6 +44,5 @@ export const Table = ({ users }: Props) => {
       small
       entries={30}
       data={datatable}
-      exportToCSV
    />;
 }
